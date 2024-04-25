@@ -4,9 +4,11 @@ import {useEffect, useState} from 'react'
 function App() {
 
   const [activeSlide , setActiveSlide] = useState('')
+  const [slideLength , setSlideLength] = useState('')
 
   useEffect(()=>{
     setActiveSlide(document.querySelector('.carousel-cell.active'))
+    setSlideLength(document.querySelectorAll('.carousel-cell').length)
   },[])
 
   const moveNext = ()=>{
@@ -30,9 +32,27 @@ function App() {
      }
    
   } 
-
+const addSlide = ()=>{
+  const wrapper = document.querySelector('.carousel-cell--wrapper');
+  const newDiv = document.createElement('div');
+  newDiv.className = `carousel-cell index-${slideLength + 1}`;
+  newDiv.textContent = slideLength + 1;
+  wrapper.appendChild(newDiv);
+  setSlideLength(slideLength + 1)
+  
+}
+const removeSlide = ()=>{
+  if(slideLength > 1){
+    document.querySelectorAll('.carousel-cell')[slideLength - 1].remove()
+   console.log(slideLength , document.querySelectorAll('.carousel-cell')[slideLength - 1])
+   setSlideLength(document.querySelectorAll('.carousel-cell').length)
+  }
+  else{
+    alert('You should have atleat one slide ')
+  }
+}
 const changeWithIndex = (event)=>{
-console.log(event.target.id , document.querySelector(`.index-${event.target.id}`))
+console.log(event.target.id , document.querySelector(`.index-${event.target.id}` , slideLength ))
 activeSlide.classList.remove('active')
 document.querySelector(`.index-${event.target.id}`).classList.add('active')
       setActiveSlide(document.querySelector(`.index-${event.target.id}`))
@@ -63,6 +83,11 @@ document.querySelector(`.index-${event.target.id}`).classList.add('active')
     <span onClick={(event)=>{changeWithIndex(event)}} key={index} id={index + 1}>{index + 1}</span>
   ))}
 </div>
+<div className='add-or--remove'>
+ <button onClick={removeSlide}> Remove slide </button>
+ <button onClick={addSlide}> Add slide</button>
+</div>
+
     </>
   );
 }
